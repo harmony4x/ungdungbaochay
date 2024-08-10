@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "112165732447",
+    "project_id": "ungdungthongbaochay",
+    "storage_bucket": "ungdungthongbaochay.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112165732447:android:23de8873d93842ab6f1bea",
+        "android_client_info": {
+          "package_name": "com.example.ungdungbaochay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3DPorNr9WeWUX6k7Bt9m44p_EH7maCqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
