@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "112165732447",
-    "project_id": "ungdungthongbaochay",
-    "storage_bucket": "ungdungthongbaochay.appspot.com"
+    "project_number": "451539582197",
+    "project_id": "ungdungthongbaochay-1cc59",
+    "storage_bucket": "ungdungthongbaochay-1cc59.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:112165732447:android:23de8873d93842ab6f1bea",
+        "mobilesdk_app_id": "1:451539582197:android:23d1e7ef299f09a51299bc",
         "android_client_info": {
           "package_name": "com.example.ungdungbaochay"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD3DPorNr9WeWUX6k7Bt9m44p_EH7maCqY"
+          "current_key": "AIzaSyAANUV6az3OQM8NvlKJTRo9kywQ3swVF1Y"
         }
       ],
       "services": {
