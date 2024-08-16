@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'main.dart';
 
 class PushNotifications {
   static final _firebaseMessaging = FirebaseMessaging.instance;
@@ -43,22 +48,16 @@ class PushNotifications {
   // on tap local notification in foreground
   static void onNotificationTap(NotificationResponse notificationResponse) {
     if (notificationResponse.payload != null) {
-      // Map<String, dynamic> data = jsonDecode(notificationResponse.payload!);
-      // String? idPhieu = data['IdPhieu'];
-      // String? loaiPhieu = data['LoaiPhieu'];
-      // print(idPhieu);
-      // if (idPhieu != null) {
-      //   if (loaiPhieu == "LichHen") {
-      //     navigatorKey.currentState?.push(
-      //       MaterialPageRoute(
-      //         builder: (context) => ChiTietLichHen(
-      //           maPhieu: idPhieu,
-      //           quanLyLichHen: () {},
-      //         ),
-      //       ),
-      //     );
-      //   }
-      // }
+      Map<String, dynamic> data = jsonDecode(notificationResponse.payload!);
+
+      String imageUrl = data['imageUrl'];
+
+      // Điều hướng đến Trang Chủ với URL hình ảnh
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(imageUrl: imageUrl),
+        ),
+      );
     }
   }
 
