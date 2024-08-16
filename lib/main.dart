@@ -1,11 +1,50 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:ungdungbaochay/push_notifications.dart';
+
+import 'firebase_options.dart';
+
+// function to lisen to background changes
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {
+    print("Some notification Received");
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  String? token = await PushNotifications.getFcmToken();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // Đăng ký với topic "all_users"
+  messaging.subscribeToTopic("all_users").then((_) {
+    print("Đã đăng ký thành công với topic all_users");
+  }).catchError((error) {
+    print("Đăng ký topic thất bại: $error");
+  });
+  print(token);
   runApp(const MyApp());
+
+  // on background notification tapped
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
+
+  // Listen to background notifications
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+
+  // Lắng nghe sự kiện thông báo khi ứng dụng đang ở chế độ foreground
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    String payloadData = jsonEncode(message.data);
+    print("Got a message in foreground");
+    PushNotifications.showSimpleNotification(title: message.notification!.title!, body: message.notification!.body!, payload: payloadData);
+  });
+
+  PushNotifications.init();
+  PushNotifications.localNotiInit();
 }
 
 class MyApp extends StatelessWidget {
