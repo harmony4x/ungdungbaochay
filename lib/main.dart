@@ -9,8 +9,18 @@ import 'firebase_options.dart';
 
 // function to lisen to background changes
 Future _firebaseBackgroundMessage(RemoteMessage message) async {
-  if (message.notification != null) {
-    print("Some notification Received");
+  if (message.data.isNotEmpty) {
+    String? imageUrl = message.data['imageUrl'];
+    print("Data received: ${message.data}");
+    if (imageUrl != null) {
+      print("Image URL received: $imageUrl");
+      // Điều hướng đến màn hình chứa hình ảnh
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(imageUrl: imageUrl),
+        ),
+      );
+    }
   }
 }
 
@@ -33,7 +43,21 @@ void main() async {
   runApp(const MyApp());
 
   // on background notification tapped
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (message.data.isNotEmpty) {
+      String? imageUrl = message.data['imageUrl'];
+      print("Data received: ${message.data}");
+      if (imageUrl != null) {
+        print("Image URL received: $imageUrl");
+        // Điều hướng đến màn hình chứa hình ảnh
+        navigatorKey.currentState?.push(
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(imageUrl: imageUrl),
+          ),
+        );
+      }
+    }
+  });
 
   // Listen to background notifications
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
@@ -41,8 +65,12 @@ void main() async {
   // Lắng nghe sự kiện thông báo khi ứng dụng đang ở chế độ foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     String payloadData = jsonEncode(message.data);
-    print("Got a message in foreground");
-    PushNotifications.showSimpleNotification(title: message.notification!.title!, body: message.notification!.body!, payload: payloadData);
+    if (message.data.isNotEmpty) {
+      String? imageUrl = message.data['imageUrl'];
+      print("Data received: ${message.data}");
+      PushNotifications.showSimpleNotification(
+          title: message.notification!.title!, body: message.notification!.body!, payload: payloadData, imageUrl: imageUrl);
+    }
   });
 
   PushNotifications.init();
@@ -56,6 +84,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey, // Đảm bảo navigatorKey được truyền vào đây
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -79,30 +108,35 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
+        automaticallyImplyLeading: false, // Ẩn nút Back
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Center(
-              child: widget.imageUrl.isNotEmpty
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              widget.imageUrl.isNotEmpty
+                  ? const Text(
+                      'Hệ thống đã phát hiện ra cháy từ camera.',
+                      style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
+                    )
+                  : const Text(
+                      'Không có dữ liệu.',
+                      style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+              const SizedBox(
+                height: 8,
+              ),
+              widget.imageUrl.isNotEmpty
                   ? Image.network(widget.imageUrl) // Hiển thị hình ảnh cháy
                   : const Text('Không có hình ảnh'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
